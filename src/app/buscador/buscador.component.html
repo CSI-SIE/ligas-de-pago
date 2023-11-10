@@ -1,0 +1,35 @@
+<div>
+  <form [formGroup]="formularioBuscador"
+        id="panel-registro">
+    <mat-form-field>
+      <mat-label>Escriba el nombre o el identificador</mat-label>
+      <input
+        #buscador
+        matInput
+        type="text"
+        required
+        formControlName = "palabraClave"
+        [matAutocomplete]="autocompletado"
+        (blur)="compruebaAlumno()">
+      <mat-autocomplete
+      #autocompletado="matAutocomplete"
+      [displayWith]="obtenNombreAlumno.bind(this)"
+      (optionSelected)="estableceIdIEST($event.option.value)">
+        <mat-option *ngFor="let alumno of listadoAlumnosFiltrados!.slice(0, 50)"
+        style="min-height: 48px; line-height: 1.15; height: auto; padding: 8px 16px; white-space: normal;"
+        [value]="alumno">
+        <small><strong>ID IEST</strong>: {{ alumno.idperson }}</small><br>
+        <span>{{ alumno.nombre | titlecase }}</span>
+      </mat-option>
+      </mat-autocomplete>
+      <button
+        *ngIf="this.fb.palabraClave.value"
+        mat-icon-button
+        matSuffix
+        (click)="this.limpiarBuscador()">
+        <mat-icon fontIcon="close"></mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+</div>
+

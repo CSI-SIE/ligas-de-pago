@@ -1,0 +1,18 @@
+#panel-registro
+ {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  #contenido-registro {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-top: 15px;
+
+    #buscador{
+      width: 100%;
+    }
+
+  }
+ }
