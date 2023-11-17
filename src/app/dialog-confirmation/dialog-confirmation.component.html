@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Confirmar</h1>
+<div mat-dialog-content>
+  ¿Realmente desea generar la liga de pago?
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClick()" mat-flat-button color="primary" cdkFocusInitial>No</button>
+  <button mat-button [mat-dialog-close]="ok" mat-flat-button color="primary" >Si</button>
+</div>

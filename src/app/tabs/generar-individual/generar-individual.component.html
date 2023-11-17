@@ -1,4 +1,27 @@
-<div>
+
+<!-- <div id="container">
+  <label>Permite generar una liga de pago a un prospecto en una fecha indicada en el periodo actual.</label>
+</div> -->
+<div id="container">
+<div class="buscador">
 <div id="buscador"><ng-template #buscadorEmpleados></ng-template></div>
-<p>Resultadosss</p>
+</div>
+<div>
+  <mat-form-field id="select" >
+    <mat-label>Fechas</mat-label>
+    <mat-select (selectionChange)="obtenerSeleccionado($event.value)">
+      <mat-option *ngFor="let fecha of fechas" [value]="fecha.IdExaPsicome" >
+        {{fecha.FechaExaPsicome}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+</div>
+<div id="container" >
+  <button (click)="generar()"  type="button" mat-stroked-button color="primary">
+
+    <span class="material-icons">
+      link
+    </span> Generar</button>
 </div>

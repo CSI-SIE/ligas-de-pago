@@ -1,1 +1,66 @@
-<p>historial works!</p>
+<div id="container">
+
+  <div class="top">
+
+  <mat-form-field id="select" >
+    <mat-label>Periodos</mat-label>
+    <mat-select (selectionChange)="buscarFechas($event.value)">
+      <mat-option *ngFor="let periodo of periodos" [value]="periodo.idPeriodo">
+        {{periodo.periodo}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- <mat-select [disabled]="isDisabled"> -->
+  <mat-form-field id="select" >
+    <mat-label>Fechas</mat-label>
+    <mat-select [disabled]="isDisabled" (selectionChange)="onSubmit($event.value)">
+
+      <mat-option *ngFor="let fecha of fechas" [value]="fecha.IdExaPsicome" >
+        {{fecha.FechaExaPsicome}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<div id="spinner">
+  <mat-spinner *ngIf="showSpinner"></mat-spinner>
+</div>
+
+<div class="sinResultados" *ngIf="!hayFechas && tocadoPerido">
+  <div class="mensaje">
+    <h2>No hay fechas para consultar en este periodo.</h2>
+    <label>En este periodo seleccionado no hay fechas.</label>
+  </div>
+</div>
+
+<div class="sinResultados" *ngIf="hayFechas && tocadoFecha && resultados.length<=0">
+  <div class="mensaje">
+    <h2>No hay resultados.</h2>
+    <label>No hay resultados con los parametrós proporcionados para la búsqueda.</label>
+  </div>
+</div>
+
+<div *ngIf="hayFechas && tocadoFecha && resultados.length>0">
+  <div class="exportar">
+  <button (click)="exportarExcel()" type="button" mat-stroked-button color="primary">
+
+    <span class="material-icons">
+    download
+    </span>Exportar a Excel</button>
+  </div>
+  <app-tabla-historico
+   [filtro]="filtro"
+          [resultados]="resultados"
+          [pageSizeOptions]="pageSizeOptions"
+          [displayedColumns]="displayedColumnsGrupo"
+          [tamanoTabla]="tamanoTabla"
+   >
+
+   </app-tabla-historico>
+</div>
+
+
+
+</div>

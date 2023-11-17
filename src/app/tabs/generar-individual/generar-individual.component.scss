@@ -1,0 +1,26 @@
+#container{
+
+  display: flex;
+  flex-direction: row;
+  //flex-direction: column;
+  flex-flow: wrap;
+  gap: 2.1rem; //es el espacio entre cada elemento
+  justify-content: center; // center; //flex-start  //flex-end  //space-between   //space-around  //space-evenly
+  //align-items: stretch;
+  width: 100%;
+  padding-top: 20px;
+  //height: 800px;
+  //background-color: lightgreen;
+}
+
+.buscador{
+
+  width:  400px;
+
+
+}
+
+#select{
+  width: 400px;
+
+}

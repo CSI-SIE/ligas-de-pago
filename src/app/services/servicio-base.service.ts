@@ -16,7 +16,7 @@ private httpclient = inject(HttpClient);
  * URL del endpoint que usará la aplicación para conectarse a la api.
  */
 //private static readonly API_URL = 'api/administrativo/xxxxxxxxx.php'/**cambiar a la que si va a ser :D  */
-private static readonly API_URL = '/api/administrativo/Modulo_Logistica.php';
+private static readonly API_URL = 'api/contraloria/LigasPagoApi.php';
 constructor() { }
 
   protected consulta(

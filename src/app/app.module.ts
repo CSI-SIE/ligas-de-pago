@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { registerLocaleData } from '@angular/common';
+import localeEsMx from '@angular/common/locales/es-Mx';
+
+registerLocaleData(localeEsMx, 'es-Mx');
 
 @NgModule({
   declarations: [
@@ -34,9 +40,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatDialogModule,
     MatIconModule,
     MatButtonModule,
-    MatToolbarModule
+    MatToolbarModule,
+    //DialogConfirmationComponent
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-Mx' },
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {
+          appearance: 'outline',
+          floatLabel: 'auto',
+        },
+      },
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
