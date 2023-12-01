@@ -1,5 +1,5 @@
 import { Component,Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -65,12 +65,17 @@ import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-
     MatCheckboxModule,
     MatGridListModule,
     MatListModule,
-    MatSelectModule
+    MatSelectModule,
   ]
 })
 
 
 export class GenerarIndividualComponent implements OnInit {
+
+
+  //Para convertir el formato de fecha
+  pipe = new DatePipe('en-US');
+  //----------------------------------
 
   fechaSeleccionado = 0;
 
@@ -89,15 +94,24 @@ export class GenerarIndividualComponent implements OnInit {
 
    private suscripciones: Subscription[];
 
+   fechagenerar = new FormControl();
+
+   fechaVigencia: string | null;
+
   constructor(
     private _catalogosService: CatalogosService,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
+
   ){
     this.idiest = 0;
     this.NombreA ='';
 
     this.suscripciones=[];
+
+    this.fechaVigencia = "";
+
+
   }
 
   openSnackBar(mensjae:string) {
@@ -108,87 +122,56 @@ export class GenerarIndividualComponent implements OnInit {
     });
   }
 
-  buscarFechas(){
-
-    this.fechas = [];
-    //this.tocadoPerido = true;
-    console.log("entró a buscarFechas");
-    const obtenerFechas$ = this._catalogosService.obtenerCatalogoPeriodo_o_Fecha(
-      {
-        idTipo:1,
-        idPeriodo:101
-      }
-    )
-  .subscribe({
-    next: (fechas:any) => {
-      console.log(fechas);
-
-      this.fechas = fechas;
-
-      if(this.fechas.length>0){
-        //this.isDisabled = false;
-        //this.hayFechas = true;
-       }
-       else{
-        this.openSnackBar("No hay fechas en este periodo.");
-        //this.hayFechas = false;
-        //this.isDisabled = true;
-       }
-
-    },
-    error: (error) => {
-      console.warn(error);
-      //alert('Ocurrio un error al procesar la solicitud');
-    },
-  });
-  this.suscripciones.push(obtenerFechas$ );
-  }
-
   obtenerSeleccionado(idFechaExamen:any){
     this.fechaSeleccionado = idFechaExamen;
   }
 
+
   generar(){
-    const dialogRef$ = this.dialog.open(DialogConfirmationComponent,{
-      width:'30%',
-      disableClose:true,
-      autoFocus:true
-    });
-    dialogRef$.afterClosed().subscribe(result=>{
-      if(result == undefined){
-        console.log("cancelado");
-      }
-      else{
-        //*** Se va a generar la liga */
-        console.log("Se va a mandar prospoecto: " + 74401);
-        console.log("Se va a mandar idFecha: " + '17/11/2023');
-
-        const genera$ = this._catalogosService.generarLigaIndividual(
-          {
-            idProspecto:74401,//this.idiest,
-            fechaVigencia:'17/11/2023', //this.fechaSeleccionado,
-            ipRecibida:0
-          }
-        )
-      .subscribe({
-        next: (result:any) => {
-          console.log(result);
-        },
-        error: (error) => {
-          console.warn(error);
-        },
+    this.fechaVigencia = "";
+    this.fechaVigencia = this.pipe.transform(this.fechagenerar.value, 'dd/MM/yyyy');
+    if(this.fechaVigencia){
+      const dialogRef$ = this.dialog.open(DialogConfirmationComponent,{
+        width:'30%',
+        disableClose:true,
+        autoFocus:true
       });
-      this.suscripciones.push(genera$ );
-      /*** Termina generar liga */
-
+      dialogRef$.afterClosed().subscribe(result=>{
+        if(result == undefined){
+          //console.log("cancelado");
         }
-      });
+        else{
+          //*** Se va a generar la liga */
+          const genera$ = this._catalogosService.generarLigaIndividual(
+            {
+              idProspecto:this.idiest,
+              fechaVigencia: this.fechaVigencia,
+              ipRecibida:0
+            }
+          )
+        .subscribe({
+          next: (result:any) => {
+            this.openSnackBar(result);
+
+          },
+          error: (error) => {
+            console.warn(error);
+          },
+        });
+        this.suscripciones.push(genera$);
+        /*** Termina generar liga */
+
+          }
+        });
+    }
+    else{
+      this.openSnackBar("Favor de especificar una fecha para la vigencia.");
+    }
   }
 
 
   async ngOnInit() {
     this.cargaBuscador();
-    this.buscarFechas();
   }
       /**
    * Obtiene la referencia del contenedor donde se cargará de forma perezosa el
@@ -210,7 +193,6 @@ export class GenerarIndividualComponent implements OnInit {
       instance.idPersonSeleccionado.subscribe({
         next: (idPersonSeleccionado: number) => {
           this.idiest = idPersonSeleccionado;
-          console.log("idiest seleccionado:" + this.idiest)
           /* >>>> comentado pero hay que asignarlo <<<< */
           // this.formulario.controls.idPersonSolicitado.setValue(
           //   idPersonSeleccionado

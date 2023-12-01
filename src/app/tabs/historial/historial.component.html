@@ -11,7 +11,7 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- <mat-select [disabled]="isDisabled"> -->
+
   <mat-form-field id="select" >
     <mat-label>Fechas</mat-label>
     <mat-select [disabled]="isDisabled" (selectionChange)="onSubmit($event.value)">
@@ -30,26 +30,36 @@
 
 <div class="sinResultados" *ngIf="!hayFechas && tocadoPerido">
   <div class="mensaje">
-    <h2>No hay fechas para consultar en este periodo.</h2>
-    <label>En este periodo seleccionado no hay fechas.</label>
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>No hay fechas para consultar en este periodo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>En este periodo seleccionado no hay fechas.</mat-card-content>
+    </mat-card>
+    <br>
   </div>
 </div>
 
 <div class="sinResultados" *ngIf="hayFechas && tocadoFecha && resultados.length<=0">
   <div class="mensaje">
-    <h2>No hay resultados.</h2>
-    <label>No hay resultados con los parametrós proporcionados para la búsqueda.</label>
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>Sin resultados</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>No hay resultados con los parámetros proporcionados para la búsqueda.</mat-card-content>
+    </mat-card>
   </div>
 </div>
 
 <div *ngIf="hayFechas && tocadoFecha && resultados.length>0">
   <div class="exportar">
-  <button (click)="exportarExcel()" type="button" mat-stroked-button color="primary">
+  <button (click)="exportarExcel()" type="button" mat-raised-button color="primary">
 
     <span class="material-icons">
     download
     </span>Exportar a Excel</button>
   </div>
+  <div>
   <app-tabla-historico
    [filtro]="filtro"
           [resultados]="resultados"
@@ -59,6 +69,7 @@
    >
 
    </app-tabla-historico>
+  </div>
 </div>
 
 

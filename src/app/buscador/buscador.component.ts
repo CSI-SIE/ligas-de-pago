@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CatalogosService } from 'src/app/services/catalogos.service';
 import { formularioBuscador } from 'src/app/shared/models/formularios/formulario-buscador.model';
-import { Buscador25 } from 'src/app/shared/models/Buscador25.model';
+import { Buscador81 } from '../shared/models/Buscador81Prospectos.model';
 
 @Component({
   selector: 'app-buscador',
@@ -36,7 +36,7 @@ export class BuscadorComponent implements OnInit {
   private suscripciones: Subscription[];
   public muestraBuscador: boolean;
   public formularioBuscador: FormGroup<formularioBuscador>;
-  public listadoAlumnosFiltrados: Buscador25[];
+  public listadoAlumnosFiltrados: Buscador81[];
 
   public efBuscador: any = {
     palabraClave: '',
@@ -94,9 +94,8 @@ export class BuscadorComponent implements OnInit {
         (palabraClave) =>
         this._catalogosService.PER_BuscadoresPersonas(
           {
-            idTipo: 25,
             indicador: palabraClave ?? '',
-            idPerson: 0
+
           }
         )
       )
@@ -156,30 +155,30 @@ export class BuscadorComponent implements OnInit {
 
   public compruebaAlumno(): void {
       const coincidencias = this.listadoAlumnosFiltrados.filter(
-        (alumno) => alumno.idperson === this.fb.idPerson.value);
+        (alumno) => alumno.idprospecto === this.fb.idPerson.value);
 
       if (coincidencias.length === 0) {
         this.fb.idPerson.setValue(null);
       }
   }
 
-  public obtenNombreAlumno(alumnoSeleccionado: Buscador25): string {
+  public obtenNombreAlumno(alumnoSeleccionado: Buscador81): string {
     if (!alumnoSeleccionado) {
       return '';
     }
 
     const clave = this.listadoAlumnosFiltrados.findIndex(
-      (alumno) => alumno.idperson === alumnoSeleccionado.idperson);
-    return this.listadoAlumnosFiltrados[clave].nombre.trim();
+      (alumno) => alumno.idprospecto === alumnoSeleccionado.idprospecto);
+    return this.listadoAlumnosFiltrados[clave].nombreCompleto.trim();
   }
 
-  public estableceIdIEST(alumnoSeleccionado: Buscador25): void {
+  public estableceIdIEST(alumnoSeleccionado: Buscador81): void {
     setTimeout(
       () => {
         this.buscador.nativeElement.blur();
         // this.selectTipoSolicitud.focus();
     }, 357);
-    this.fb.idPerson.setValue(alumnoSeleccionado.idperson);
+    this.fb.idPerson.setValue(alumnoSeleccionado.idprospecto);
     this.idPersonSeleccionado.emit(this.fb.idPerson.value);
   }
 

@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, map, takeWhile } from 'rxjs';
 import { Buscador25 } from '../shared/models/Buscador25.model';
 import { ObtenerCatalogosPeriodosyFechas } from '../shared/models/parametros-api/ObtenerCatalogoPeriodosyFechas.model'
 import { ListadoLigasDePago } from '../shared/models/parametros-api/ListadoLigasDePago.model';
+import { Buscador81 } from '../shared/models/Buscador81Prospectos.model';
 
 
 @Injectable({
@@ -20,6 +21,7 @@ export class CatalogosService extends ServicioBase {
    public recargarTabla = new BehaviorSubject<number>(0);
   public recargarTabla$ = this.recargarTabla.asObservable();
 
+  //*** Catalogos de Periodos y Catalogo de Fechas.
    public obtenerCatalogoPeriodo_o_Fecha(extras:ObtenerCatalogosPeriodosyFechas){
     const parametros = {
 
@@ -30,8 +32,18 @@ export class CatalogosService extends ServicioBase {
     return this.consulta({...parametros,...extras},'/api/contraloria/LigasPagoApi.php')
    }
 
+   //*** Listado del Historial
    public obtenerListadoLigasDePago(extras:ListadoLigasDePago){
+    const parametros = {
+      servicio:'ligas',
+      accion: 'CON_LigasPagoListadoHistorial',
+      tipoRespuesta:'json'
+    };
+    return this.consulta({...parametros,...extras},'/api/contraloria/LigasPagoApi.php')
+   }
 
+   //*** Listado para Generar Masivamente
+   public obtenerListadoLigasDePagoMasivo(extras:ListadoLigasDePago){
     const parametros = {
       servicio:'ligas',
       accion: 'CON_LigasPagoListado',
@@ -40,6 +52,7 @@ export class CatalogosService extends ServicioBase {
     return this.consulta({...parametros,...extras},'/api/contraloria/LigasPagoApi.php')
    }
 
+   //*** Genera de forma individual una liga de pago a un prospecto
    public generarLigaIndividual(extras:any){
 
     const parametros = {
@@ -50,17 +63,29 @@ export class CatalogosService extends ServicioBase {
     return this.consulta({...parametros,...extras},'/api/contraloria/LigasPagoApi.php')
    }
 
+   //*** Genera masivamente ligas de pago a varios prospectos
+   public generarLigaMasivamente(extras:any){
+
+    const parametros = {
+      servicio:'ligas',
+      accion: 'CON_LigaWebPagos_GeneraAdeudoMasivo',
+      tipoRespuesta:'json'
+    };
+    return this.consulta({...parametros,...extras},'/api/contraloria/LigasPagoApi.php')
+   }
+
 //$.post("/includes/snippets/buscadorJQ/Proceso_Busqueda.php?
 //identificador="+id+"&
 //idtipo="+$("#inputString"+id).attr("tipo")+"&
 //y="+Math.random(),
-   public PER_BuscadoresPersonas(extras: PER_BuscadoresPersonas): Observable<Buscador25[]>{
+   public PER_BuscadoresPersonas(extras: PER_BuscadoresPersonas): Observable<Buscador81[]>{
     const parametros = {
-      servicio:'buscador',
-      accion:'PER_BuscadoresPersonas',
+
+      servicio:'ligas',
+      accion:'buscador',
       tipoRespuesta: 'json'
     };
-    return this.consulta({...parametros, ...extras}, '/api/Buscador/buscador.php');
+    return this.consulta({...parametros, ...extras}, '/api/contraloria/LigasPagoApi.php');///api/Buscador/buscador.php
   }
 
 }

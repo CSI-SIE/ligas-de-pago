@@ -9,18 +9,29 @@
   //align-items: stretch;
   width: 100%;
   padding-top: 20px;
-  //height: 800px;
+  height: 200px;
   //background-color: lightgreen;
 }
 
-.buscador{
-
+#buscador{
   width:  400px;
+}
 
+#filtros{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 2.1rem;
+}
 
+#generar{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
 }
 
 #select{
   width: 400px;
-
 }

@@ -18,8 +18,8 @@
         <mat-option *ngFor="let alumno of listadoAlumnosFiltrados!.slice(0, 50)"
         style="min-height: 48px; line-height: 1.15; height: auto; padding: 8px 16px; white-space: normal;"
         [value]="alumno">
-        <small><strong>ID IEST</strong>: {{ alumno.idperson }}</small><br>
-        <span>{{ alumno.nombre | titlecase }}</span>
+        <small><strong>ID IEST</strong>: {{ alumno.idprospecto }}</small><br>
+        <span>{{ alumno.nombreCompleto| titlecase }}</span>
       </mat-option>
       </mat-autocomplete>
       <button

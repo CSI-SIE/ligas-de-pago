@@ -2,6 +2,7 @@ import { CommonModule, NgFor } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -35,6 +36,8 @@ import { environment } from 'src/environments/environment';
     TablaHistoricoComponent,
     MatProgressSpinnerModule,
     MatTableModule,
+    MatCardModule,
+
   ]
 })
 export class HistorialComponent  implements OnInit,OnDestroy{
@@ -68,16 +71,15 @@ export class HistorialComponent  implements OnInit,OnDestroy{
       nombreProspecto: ['Nombre del prospecto'],
       idProspecto: ['idProspecto'],
       fechaLigaGenerada: ['Fecha generada'],
-      fechaEnvioLiga: ['Fecha de envío'],
       fechadepago:['Fecha de pago'],
+      vencimiento:['Fecha de vencimiento'],
 
-      acciones: [''],
       paraMostrar: [
       'nombreProspecto',
       'fechaLigaGenerada',
-      'fechaEnvioLiga',
+      'vencimiento',
       'fechadepago',
-      'acciones']
+      ]
     }
 
     };
@@ -89,9 +91,7 @@ export class HistorialComponent  implements OnInit,OnDestroy{
   //Exportar a Excel -------------------
   public exportarExcel(){
   //--------------------------------------------------------------------------------------
-    //ContraloriaNew.dbo.CON_LigasPagoListado
-    // var param = "query=exec iest.dbo.Pre_Listado_PartidasExtraordinariasTesoreria '"+
-    // 4 + "', '" + 0 + "', '" + 0 + "', '" + 97 + "', '" + 0 + "', '" + 0 +"'";
+
     var idTipo = 1;
     var param = "query=exec ContraloriaNew.dbo.CON_LigasPagoListado "+ idTipo + ","+this.fechaSeleccionado;
 
@@ -125,7 +125,6 @@ export class HistorialComponent  implements OnInit,OnDestroy{
 
 
   constructor(
-    private _router: Router,
     private _formBuilder: FormBuilder,
     private _catalogosService: CatalogosService,
     private _snackBar: MatSnackBar,) {
@@ -153,7 +152,7 @@ export class HistorialComponent  implements OnInit,OnDestroy{
 
     this.fechas = [];
     this.tocadoPerido = true;
-    console.log(idPeriodoSeleccionado);
+    //console.log(idPeriodoSeleccionado);
     const obtenerFechas$ = this._catalogosService.obtenerCatalogoPeriodo_o_Fecha(
       {
         idTipo:1,
@@ -162,7 +161,7 @@ export class HistorialComponent  implements OnInit,OnDestroy{
     )
   .subscribe({
     next: (fechas:any) => {
-      console.log(fechas);
+      //console.log(fechas);
 
       this.fechas = fechas;
 
@@ -201,10 +200,10 @@ export class HistorialComponent  implements OnInit,OnDestroy{
       ).subscribe(
         {
           next:(data: any) =>{
-           console.log(data);
+           //console.log(data);
            this.periodos = data;
 
-           console.log(this.periodos);
+           //console.log(this.periodos);
         },
           error: (errores) =>{
             console.error(errores);
@@ -243,7 +242,7 @@ export class HistorialComponent  implements OnInit,OnDestroy{
         next: (data) =>{
 
           this.resultados = data;
-          console.log(this.resultados);
+          //console.log(this.resultados);
           if(this.resultados.length<=0)
           {this.sinResultados = true;}
           else
