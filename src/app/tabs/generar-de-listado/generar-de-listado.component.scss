@@ -17,7 +17,7 @@
 
 .top{
   display: flex;
-  padding-top: 30px;
+  // padding-top: 30px;
   flex-direction: row;
   //background-color: rgb(204, 198, 195);
   //flex-direction: column;
@@ -32,7 +32,7 @@
 
 .sinResultados{
   display: flex;
-  padding-top: 50px;
+  //padding-top: 50px;
   flex-direction: row;
   justify-content: center;
   gap: 1.1rem;
@@ -40,7 +40,7 @@
 
 .conResultados{
   display: flex;
-  padding-top: 50px;
+  //padding-top: 50px;
   flex-direction: row;
   justify-content: center;
   gap: 1.1rem;
@@ -71,6 +71,11 @@
   color:rgb(194, 116, 20);
 }
 
+.texto-amarillo{
+  //background-color: rgb(250, 224, 167);
+  color:rgb(219, 152, 70);
+}
+
 .card-verde{
   background-color: rgb(154, 216, 162);
   color:rgb(42, 122, 78);
@@ -81,9 +86,32 @@
 }
 
 
-#generar{
+// #generar{
+//   display: flex;
+//   flex-direction: row;
+//   width: 100%;
+//   justify-content: center;
+// }
+
+.generar{
+  // display: flex;
+  padding-top: 10px;
+  // flex-direction: row;
+  // justify-content: center;
+  // gap: 1.1rem;
+}
+
+
+.buttom{
   display: flex;
+  //padding-top: 30px;
   flex-direction: row;
-  width: 100%;
-  justify-content: center;
+  //background-color: rgb(204, 198, 195);
+  //flex-direction: column;
+  flex-flow: wrap;
+  gap: 1.1rem; //es el espacio entre cada elemento
+  justify-content: center; //space-between; //// center; //flex-start  //flex-end  //space-between   //space-around  //space-evenly
+  //align-items: stretch;
+  //height: 800px;
+  //background-color: lightgreen;
 }

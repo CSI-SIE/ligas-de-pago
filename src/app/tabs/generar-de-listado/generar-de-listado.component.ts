@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe, NgFor } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,14 +11,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable, Subscription, firstValueFrom, map } from 'rxjs';
 import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
 import { CatalogosService } from 'src/app/services/catalogos.service';
 import { Fechas } from 'src/app/shared/models/Fechas.model';
 import { Periodos } from 'src/app/shared/models/Periodos.model';
 import { environment } from 'src/environments/environment';
-import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-bar';
+import { ProgressBarMode, MatProgressBarModule } from '@angular/material/progress-bar';
+import { TablaMasivamenteComponent } from 'src/app/tabla-masivamente/tabla-masivamente.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'generar-de-listado',
@@ -37,12 +39,14 @@ import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-
     MatProgressSpinnerModule,
     MatTableModule,
     MatCardModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    TablaMasivamenteComponent
   ]
 })
 
 export class GenerarDeListadoComponent implements OnInit {
 
+  selectDeFechas = "";
   //Progress bar
   color: ThemePalette = 'primary';
   mode: ProgressBarMode = 'determinate';
@@ -68,10 +72,32 @@ export class GenerarDeListadoComponent implements OnInit {
   tocadoFecha:boolean = false;
   buttonDisabled:boolean = true;
 
+  //*** Tabla ***----------------------------------
+  public filtro: string = '';
+  private finalizaSubscripcionrecargarTabla: Subscription | any;
   showSpinner = false;
   clickBusqueda = false;
   sinResultados = false;
   resultados:any[] = [];
+
+  ligasProcesadasRespuesta:any[] = [];
+
+  pageSizeOptions = [100, 200, 500, 1000];
+  tamanoTabla = "w-sm-90 w-lg-70 w-xl-50";
+
+  //Estos nombres cambian respecto a como lo mandan de la consulta
+  public displayedColumnsGrupo = {
+    columnas: {
+      nombreProspecto: ['Nombre del prospecto'],
+      mensaje: ['Respuesta'],
+      paraMostrar: [
+      'nombreProspecto',
+      'mensaje',
+      ]
+    }
+
+    };
+  //--------tabla --------------------------------
 
   fechaSeleccionado = 0;
 
@@ -83,7 +109,11 @@ export class GenerarDeListadoComponent implements OnInit {
 
    procesados: any[] = [];
 
-
+  resetSelect(){
+    this.selectDeFechas = "";
+    this.resultados = [];
+    this.tocadoFecha = false;
+  }
 
   //progress$: Observable<number>
   progress$: Observable<Array<number[]>> = new Observable<Array<number[]>>();
@@ -136,7 +166,7 @@ export class GenerarDeListadoComponent implements OnInit {
         disableClose:true,
         autoFocus:true
       });
-      dialogRef$.afterClosed().subscribe(result=>{
+      dialogRef$.afterClosed().subscribe(async result=>{
         if(result == undefined){
           //console.log("cancelado");
           this.showSpinner = false;
@@ -144,12 +174,22 @@ export class GenerarDeListadoComponent implements OnInit {
         else{
 
           //console.log(this.showSpinner);
-          var vueltas = 0;
+          // var vueltas = 0;
+          this.ligasProcesadasRespuesta = [];
 
-          this.resultados.forEach(async element => {
-              this.cicloGerarLigas(element['idProspecto']);
-              vueltas++;
-          });
+
+
+            for await (let element of this.resultados){
+              await this.cicloGerarLigas(element['idProspecto']);
+              //console.log(element);
+            }
+
+
+          // this.resultados.forEach(async element => {
+          //    await this.cicloGerarLigas(element['idProspecto']);
+
+          //     vueltas++;
+          // });
 
           // var total = 300;
           // var prospectooo = 10;
@@ -162,7 +202,8 @@ export class GenerarDeListadoComponent implements OnInit {
           this.showSpinner = false;
           this.buttonDisabled = true;
           this.resultados = [];
-          this.tocadoFecha = false;
+          this.resultados = this.ligasProcesadasRespuesta;
+          //this.tocadoFecha = false;
 
           this.openSnackBar("Se han generado las ligas de pago.");
 
@@ -214,7 +255,6 @@ export class GenerarDeListadoComponent implements OnInit {
   async cicloGerarLigas(prospecto:any) {
 
      //console.log(prospecto);
-
       //console.log(element['idProspecto']);
       const genera$ = await firstValueFrom(this._catalogosService.generarLigaMasivamente(
           {
@@ -223,6 +263,7 @@ export class GenerarDeListadoComponent implements OnInit {
               ipRecibida:0
           }
         ));
+        this.ligasProcesadasRespuesta.push(genera$[0]);
   }
 
   buscarFechas(idPeriodoSeleccionado:any){
@@ -230,6 +271,8 @@ export class GenerarDeListadoComponent implements OnInit {
     this.fechas = [];
     this.tocadoPerido = true;
     //console.log(idPeriodoSeleccionado);
+    this.resetSelect();
+
     const obtenerFechas$ = this._catalogosService.obtenerCatalogoPeriodo_o_Fecha(
       {
         idTipo:1,
@@ -286,7 +329,9 @@ export class GenerarDeListadoComponent implements OnInit {
         next: (data) =>{
 
           this.resultados = data;
-          //console.log(this.resultados);
+
+
+          console.log(this.resultados);
           if(this.resultados.length<=0)
           {this.sinResultados = true;}
           else
@@ -319,4 +364,5 @@ export class GenerarDeListadoComponent implements OnInit {
       suscripcion.unsubscribe();
     });
   }
+
 }

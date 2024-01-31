@@ -1,74 +1,113 @@
 <div id="container">
+<br>
+<div class="buttom">
 
-  <div class="top">
+  <!-- <mat-card [ngClass]="{'card-amarilla': !hayFechas && tocadoPerido, 'card-verde': hayFechas && tocadoFecha && resultados.length>0 }"> -->
+  <mat-card>
+    <mat-card-header>
+      <!-- <mat-card-title *ngIf="!hayFechas && tocadoPerido">No hay fechas para consultar en este periodo</mat-card-title> -->
+      <div class="top">
 
-  <mat-form-field id="select" >
-    <mat-label>Periodos</mat-label>
-    <mat-select (selectionChange)="buscarFechas($event.value)">
-      <mat-option *ngFor="let periodo of periodos" [value]="periodo.idPeriodo">
-        {{periodo.periodo}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-form-field id="select" >
+          <mat-label>Periodos</mat-label>
+          <mat-select (selectionChange)="buscarFechas($event.value)">
+            <mat-option *ngFor="let periodo of periodos" [value]="periodo.idPeriodo">
+              {{periodo.periodo}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-  <mat-form-field id="select" >
-    <mat-label>Fechas</mat-label>
-    <mat-select [disabled]="isDisabled" (selectionChange)="onSubmit($event.value)">
+        <mat-form-field id="select" >
+          <mat-label>Fechas</mat-label>
+          <mat-select [disabled]="isDisabled" (selectionChange)="onSubmit($event.value)" [(ngModel)]="selectDeFechas">
 
-      <mat-option *ngFor="let fecha of fechas" [value]="fecha.IdExaPsicome" >
-        {{fecha.FechaExaPsicome}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+            <mat-option *ngFor="let fecha of fechas" [value]="fecha.IdExaPsicome" >
+              {{fecha.FechaExaPsicome}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      <div class="generar">
+        <button id="generar" [disabled]="buttonDisabled"  (click)="generar()"  type="button" mat-raised-button color="primary">
+          <span class="material-icons">
+            link
+          </span> Generar</button>
+      </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content *ngIf="!hayFechas && tocadoPerido" class="texto-amarillo" >En este periodo seleccionado no hay fechas.</mat-card-content>
+    <!--<mat-card-content *ngIf="hayFechas && tocadoFecha && resultados.length<=0">No hay resultados con los parámetros proporcionados para la búsqueda.</mat-card-content>
+    <mat-card-content *ngIf="this.resultados.length==1">Se generará {{this.resultados.length}} liga de pago.</mat-card-content>
+    <mat-card-content *ngIf="this.resultados.length > 1">Se generarán {{this.resultados.length}} ligas de pago.</mat-card-content> -->
 
+    <!-- <mat-card-actions align="end">
+
+    </mat-card-actions> -->
+  </mat-card>
+
+  <!-- <div class="sinResultados" *ngIf="!hayFechas && tocadoPerido">
+    <div class="mensaje">
+      <mat-card class="card-amarilla">
+        <mat-card-header>
+          <mat-card-title>No hay fechas para consultar en este periodo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>En este periodo seleccionado no hay fechas.</mat-card-content>
+      </mat-card>
+      <br>
+    </div>
+  </div>
+
+
+
+  <div class="conResultados" *ngIf="hayFechas && tocadoFecha && resultados.length>0">
+    <div class="mensaje">
+      <mat-card class="card-verde">
+        <mat-card-header>
+        </mat-card-header>
+        <mat-card-content *ngIf="this.resultados.length==1">Se generará {{this.resultados.length}} liga de pago.</mat-card-content>
+        <mat-card-content *ngIf="this.resultados.length > 1">Se generarán {{this.resultados.length}} ligas de pago.</mat-card-content>
+
+      </mat-card>
+    </div>
+  </div> -->
+
+  <!-- <div>
+   <div class="generar">
+    <button [disabled]="buttonDisabled"  (click)="generar()"  type="button" mat-raised-button color="primary">
+      <span class="material-icons">
+        link
+      </span> Generar</button>
+   </div>
+  </div> -->
 </div>
 
-<div class="sinResultados" *ngIf="!hayFechas && tocadoPerido">
-  <div class="mensaje">
-    <mat-card class="card-amarilla">
-      <mat-card-header>
-        <mat-card-title>No hay fechas para consultar en este periodo</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>En este periodo seleccionado no hay fechas.</mat-card-content>
-    </mat-card>
-    <br>
-  </div>
+<div id="spinner">
+  <mat-spinner *ngIf="showSpinner"></mat-spinner>
 </div>
 
 <div class="sinResultados" *ngIf="hayFechas && tocadoFecha && resultados.length<=0">
   <div class="mensaje">
     <mat-card class="card-amarilla">
       <mat-card-header>
-        <mat-card-title>Sin resultados</mat-card-title>
       </mat-card-header>
       <mat-card-content>No hay resultados con los parámetros proporcionados para la búsqueda.</mat-card-content>
     </mat-card>
   </div>
 </div>
 
-<div class="conResultados" *ngIf="hayFechas && tocadoFecha && resultados.length>0">
-  <div class="mensaje">
-    <mat-card class="card-verde">
-      <mat-card-header>
-        <!-- <mat-card-title>Notificación</mat-card-title> -->
-      </mat-card-header>
-      <mat-card-content *ngIf="this.resultados.length==1">Se generará {{this.resultados.length}} liga de pago.</mat-card-content>
-      <mat-card-content *ngIf="this.resultados.length > 1">Se generarán {{this.resultados.length}} ligas de pago.</mat-card-content>
+<div *ngIf="hayFechas && tocadoFecha && resultados.length>0">
 
-    </mat-card>
-  </div>
+  <app-tabla-masivamente
+   [filtro]="filtro"
+          [resultados]="resultados"
+          [pageSizeOptions]="pageSizeOptions"
+          [displayedColumns]="displayedColumnsGrupo"
+          [tamanoTabla]="tamanoTabla"
+   >
+   </app-tabla-masivamente>
 </div>
 
-<br><br>
-  <div id="generar">
-    <button [disabled]="buttonDisabled"  (click)="generar()"  type="button" mat-raised-button color="primary">
-      <span class="material-icons">
-        link
-      </span> Generar</button>
-  </div>
 
-  <div id="spinner">
-    <mat-spinner *ngIf="showSpinner"></mat-spinner>
-  </div>
-
+<br>
 </div>
+
+

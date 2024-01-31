@@ -24,7 +24,6 @@ registerLocaleData(localeEsMx, 'es-Mx');
 @NgModule({
   declarations: [
     AppComponent,
-
   ],
   imports: [
     BrowserModule,

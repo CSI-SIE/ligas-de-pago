@@ -14,7 +14,7 @@ export const environment = {
   /**
    * URL absoluta del proyecto incluyendo subdirectorios.
    */
-  url: 'https//sie.iest.edu.mx/app/caja',
+  url: 'https//sie.iest.edu.mx/app/ligas-pago',
   /**
    * Nombre del proyecto.
    */

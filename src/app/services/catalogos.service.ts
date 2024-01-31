@@ -9,6 +9,7 @@ import { ListadoLigasDePago } from '../shared/models/parametros-api/ListadoLigas
 import { Buscador81 } from '../shared/models/Buscador81Prospectos.model';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,6 +87,17 @@ export class CatalogosService extends ServicioBase {
       tipoRespuesta: 'json'
     };
     return this.consulta({...parametros, ...extras}, '/api/contraloria/LigasPagoApi.php');///api/Buscador/buscador.php
+  }
+
+  //** Obtiene los permisos para mostrar u ocultar pestañas del tab */
+  public permisos(){
+    const parametros = {
+
+      servicio:'ligas',
+      accion:'CON_LigaPago_ConsultaPermiso',
+      tipoRespuesta: 'json'
+    };
+    return this.consulta({...parametros}, '/api/contraloria/LigasPagoApi.php');///api/Buscador/buscador.php
   }
 
 }

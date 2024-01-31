@@ -32,7 +32,6 @@ import { Fechas } from 'src/app/shared/models/Fechas.model';
 import { CatalogosService } from 'src/app/services/catalogos.service';
 import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-confirmation.component';
 
-
 @Component({
   selector: 'generar-individual',
   templateUrl: './generar-individual.component.html',
@@ -65,7 +64,8 @@ import { DialogConfirmationComponent } from 'src/app/dialog-confirmation/dialog-
     MatCheckboxModule,
     MatGridListModule,
     MatListModule,
-    MatSelectModule,
+    MatSelectModule
+
   ]
 })
 

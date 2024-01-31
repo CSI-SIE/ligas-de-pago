@@ -73,12 +73,14 @@ export class HistorialComponent  implements OnInit,OnDestroy{
       fechaLigaGenerada: ['Fecha generada'],
       fechadepago:['Fecha de pago'],
       vencimiento:['Fecha de vencimiento'],
+      MedioPago:['Medio de pago'],
 
       paraMostrar: [
       'nombreProspecto',
       'fechaLigaGenerada',
       'vencimiento',
       'fechadepago',
+      'MedioPago',
       ]
     }
 
@@ -155,7 +157,7 @@ export class HistorialComponent  implements OnInit,OnDestroy{
     //console.log(idPeriodoSeleccionado);
     const obtenerFechas$ = this._catalogosService.obtenerCatalogoPeriodo_o_Fecha(
       {
-        idTipo:1,
+        idTipo:3, //Modificado 2024-01-29
         idPeriodo:idPeriodoSeleccionado
       }
     )
